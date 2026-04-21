@@ -28,7 +28,8 @@ export function AlumniPanel() {
   useEffect(() => { load(); }, []);
 
   const toggle = async (id: string, key: "featured" | "visible", v: boolean) => {
-    const { error } = await supabase.from("alumni").update({ [key]: !v }).eq("id", id);
+    const patch = key === "featured" ? { featured: !v } : { visible: !v };
+    const { error } = await supabase.from("alumni").update(patch).eq("id", id);
     if (error) return toast.error(error.message);
     load();
   };
