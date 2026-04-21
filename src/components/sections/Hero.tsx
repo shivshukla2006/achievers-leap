@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Compass, Users, TrendingUp, Trophy } from "lucide-react";
-import { HeroScene } from "./three/HeroScene";
+import { HeroScene } from "@/components/three/HeroScene";
 
 const stats = [
   { icon: Users, value: "25K+", label: "Students enrolled" },
