@@ -16,10 +16,10 @@ interface Alumnus {
 }
 
 const FALLBACK: Alumnus[] = [
-  { id: "f1", name: "Ananya Sharma", student_class: "Class 12", exam: "JEE Advanced 2024", score: "AIR 47", rank: "47", image_url: null, review: "The AI doubt-clearing at 2 AM before mocks was a game changer. Mentors treated me like family.", featured: true },
-  { id: "f2", name: "Rahul Verma", student_class: "Class 12", exam: "NEET UG 2024", score: "705/720", rank: "112", image_url: null, review: "Biology became my favourite subject here. The visualisations made every concept click instantly.", featured: false },
-  { id: "f3", name: "Ishita Patel", student_class: "Class 10", exam: "CBSE Boards", score: "98.4%", rank: null, image_url: null, review: "From 76% in Class 9 to 98.4% in Boards — the personalised study plan changed my life.", featured: false },
-  { id: "f4", name: "Arjun Mehta", student_class: "Class 11", exam: "IMO Olympiad", score: "Gold Medal", rank: "Top 12 India", image_url: null, review: "Olympiad mentors here are actual past medalists. You can feel the difference in every class.", featured: false },
+  { id: "f1", name: "Ananya Sharma", student_class: "Class 12", exam: "JEE Advanced 2024", score: "AIR 47", rank: "47", image_url: null, review: "The faculty stayed back after class to clear every doubt. The mentors here treated me like family.", featured: true },
+  { id: "f2", name: "Rahul Verma", student_class: "Class 12", exam: "NEET UG 2024", score: "705/720", rank: "112", image_url: null, review: "Biology became my favourite subject here. The teachers explained every concept with real clarity.", featured: false },
+  { id: "f3", name: "Ishita Patel", student_class: "Class 10", exam: "CBSE Boards", score: "98.4%", rank: null, image_url: null, review: "From 76% in Class 9 to 98.4% in Boards — the personal attention from teachers changed everything.", featured: false },
+  { id: "f4", name: "Arjun Mehta", student_class: "Class 11", exam: "IMO Olympiad", score: "Gold Medal", rank: "Top 12 India", image_url: null, review: "Our Olympiad mentors are themselves past medalists. You feel the difference in every single class.", featured: false },
 ];
 
 function initials(name: string) {

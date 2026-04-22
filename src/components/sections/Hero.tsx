@@ -25,16 +25,15 @@ export function Hero() {
         >
           <div className="inline-flex items-center gap-2 glass px-4 py-2 rounded-full text-xs font-medium">
             <span className="h-2 w-2 rounded-full bg-accent animate-pulse-glow" />
-            AI-powered learning · Class 1 → 12
+            Trusted coaching · Class 1 → 12
           </div>
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.05] tracking-tight">
-            <span className="block">AI-Powered</span>
-            <span className="gradient-text">Learning</span>
-            <span className="block">for Future Toppers</span>
+            <span className="block">Expert Coaching</span>
+            <span className="gradient-text">for Future Toppers</span>
           </h1>
           <p className="text-lg text-muted-foreground max-w-lg leading-relaxed">
-            Personalised mentorship, holographic classrooms, and a track record of toppers in JEE,
-            NEET, Boards & Olympiads. Built for the next generation of achievers.
+            Experienced faculty, small batches, weekly tests and a proven track record of toppers in
+            JEE, NEET, Boards & Olympiads. Personal attention for every student, Class 1 to 12.
           </p>
 
           <div className="flex flex-wrap gap-3">

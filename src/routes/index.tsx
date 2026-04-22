@@ -9,10 +9,10 @@ import { Footer } from "@/components/Footer";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Academic Achievers — AI Powered Learning for Future Toppers" },
-      { name: "description", content: "India's AI-powered coaching for Class 1–12. JEE, NEET, Boards & Olympiads with personalised mentorship and proven topper results." },
-      { property: "og:title", content: "Academic Achievers — AI Powered Learning for Future Toppers" },
-      { property: "og:description", content: "Personalised mentorship, holographic classrooms, and a track record of toppers in JEE, NEET, Boards & Olympiads." },
+      { title: "Academic Achievers — Coaching Institute for Class 1 to 12" },
+      { name: "description", content: "Trusted coaching institute for Class 1–12. Expert faculty, small batches and proven topper results in JEE, NEET, Boards & Olympiads." },
+      { property: "og:title", content: "Academic Achievers — Coaching Institute for Class 1 to 12" },
+      { property: "og:description", content: "Experienced faculty, small batches, regular tests and a proven track record of toppers in JEE, NEET, Boards & Olympiads." },
     ],
   }),
   component: Index,
