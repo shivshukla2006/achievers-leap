@@ -13,7 +13,7 @@ export function Footer() {
             <span className="font-display font-bold">Academic <span className="gradient-text">Achievers</span></span>
           </div>
           <p className="text-sm text-muted-foreground max-w-md leading-relaxed">
-            India's AI-powered coaching ecosystem for Class 1–12 — building the next generation of toppers, innovators and changemakers.
+            A trusted coaching institute for Class 1–12 — experienced faculty, small batches and a proven record of toppers in Boards, JEE, NEET and Olympiads.
           </p>
         </div>
         <div>

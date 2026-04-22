@@ -1,13 +1,13 @@
 import { motion } from "framer-motion";
-import { Atom, Calculator, FlaskConical, BookOpen, Trophy, Brain } from "lucide-react";
+import { Atom, Calculator, FlaskConical, BookOpen, Trophy, GraduationCap } from "lucide-react";
 
 const courses = [
-  { icon: BookOpen, title: "Foundation (1–8)", desc: "Concept-first learning with gamified practice and weekly diagnostics.", tag: "Class 1–8" },
-  { icon: Trophy, title: "Boards 9–12", desc: "CBSE / ICSE / State Board mastery with AI-graded mock exams.", tag: "Class 9–12" },
-  { icon: Calculator, title: "JEE Main + Advanced", desc: "PCM with IIT alumni mentors, daily problem clinics & rank predictor.", tag: "Class 11–12" },
-  { icon: FlaskConical, title: "NEET UG", desc: "NCERT-rooted Biology, Chemistry & Physics with NEET-pattern testing.", tag: "Class 11–12" },
-  { icon: Atom, title: "Olympiads", desc: "NTSE, KVPY, IMO, IPhO, IChO — small batches led by past medalists.", tag: "Class 6–12" },
-  { icon: Brain, title: "AI Tutor 1:1", desc: "Adaptive learning paths, voice doubt-solving and 24/7 study companion.", tag: "All grades" },
+  { icon: BookOpen, title: "Foundation (1–8)", desc: "Strong concept building in Maths, Science & English with regular practice and weekly tests.", tag: "Class 1–8" },
+  { icon: Trophy, title: "Boards 9–12", desc: "CBSE / ICSE / State Board coaching with chapter tests, full syllabus mocks and answer-writing practice.", tag: "Class 9–12" },
+  { icon: Calculator, title: "JEE Main + Advanced", desc: "Physics, Chemistry & Maths taught by experienced faculty with daily problem-solving sessions.", tag: "Class 11–12" },
+  { icon: FlaskConical, title: "NEET UG", desc: "NCERT-rooted Biology, Chemistry & Physics with NEET-pattern tests and detailed performance review.", tag: "Class 11–12" },
+  { icon: Atom, title: "Olympiads", desc: "NTSE, KVPY, IMO, IPhO, IChO — small batches led by senior subject mentors.", tag: "Class 6–12" },
+  { icon: GraduationCap, title: "Doubt Clearing", desc: "Daily one-on-one doubt sessions with faculty so no question is ever left unanswered.", tag: "All grades" },
 ];
 
 export function Courses() {
