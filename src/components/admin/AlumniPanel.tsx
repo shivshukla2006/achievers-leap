@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import { Plus, Trash2, Star, Eye, EyeOff, X } from "lucide-react";
+import { Plus, Trash2, Star, Eye, EyeOff, X, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { uploadSiteImage } from "@/lib/uploadImage";
 
 interface Alumnus {
   id: string;
@@ -91,6 +92,17 @@ export function AlumniPanel() {
 function AddAlumnusModal({ onClose }: { onClose: () => void }) {
   const [form, setForm] = useState({ name: "", student_class: "Class 12", exam: "", score: "", rank: "", image_url: "", review: "", featured: false });
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
+
+  const onFile = async (f: File | null) => {
+    if (!f) return;
+    setUploading(true);
+    try {
+      const url = await uploadSiteImage(f, "alumni");
+      setForm((s) => ({ ...s, image_url: url }));
+    } catch (e: any) { toast.error(e.message); }
+    setUploading(false);
+  };
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -122,7 +134,13 @@ function AddAlumnusModal({ onClose }: { onClose: () => void }) {
           <input required placeholder="Score (e.g., AIR 47)" value={form.score} onChange={(e) => setForm({ ...form, score: e.target.value })} className={fld} />
           <input placeholder="Rank (optional)" value={form.rank} onChange={(e) => setForm({ ...form, rank: e.target.value })} className={fld} />
         </div>
-        <input placeholder="Image URL (optional)" value={form.image_url} onChange={(e) => setForm({ ...form, image_url: e.target.value })} className={fld} />
+        <div className="space-y-2">
+          {form.image_url && <img src={form.image_url} alt="" className="h-20 w-20 object-cover rounded-xl" />}
+          <label className="glass rounded-xl px-3 h-10 flex items-center justify-center text-sm cursor-pointer hover:scale-[1.01] transition-transform">
+            {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : (form.image_url ? "Replace photo" : "Upload photo (optional)")}
+            <input type="file" accept="image/*" className="hidden" onChange={(e) => onFile(e.target.files?.[0] ?? null)} />
+          </label>
+        </div>
         <textarea required placeholder="Review / testimonial" rows={4} value={form.review} onChange={(e) => setForm({ ...form, review: e.target.value })}
           className="w-full rounded-xl bg-background/60 border border-border px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none" />
         <label className="flex items-center gap-2 text-sm">

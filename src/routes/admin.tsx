@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Sparkles, LogOut, LayoutDashboard, Inbox, GraduationCap, UserCog, Loader2 } from "lucide-react";
+import { Sparkles, LogOut, LayoutDashboard, Inbox, GraduationCap, UserCog, Loader2, BookOpen, Users } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/useAuth";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -9,13 +9,15 @@ import { Overview } from "@/components/admin/Overview";
 import { LeadsPanel } from "@/components/admin/LeadsPanel";
 import { AlumniPanel } from "@/components/admin/AlumniPanel";
 import { TeachersPanel } from "@/components/admin/TeachersPanel";
+import { CoursesPanel } from "@/components/admin/CoursesPanel";
+import { FacultyPanel } from "@/components/admin/FacultyPanel";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({ meta: [{ title: "Admin Dashboard — Academic Achievers" }, { name: "robots", content: "noindex" }] }),
   component: AdminPage,
 });
 
-type Tab = "overview" | "leads" | "alumni" | "teachers";
+type Tab = "overview" | "leads" | "courses" | "faculty" | "alumni" | "teachers";
 
 function AdminPage() {
   const { user, role, loading } = useAuth();
@@ -34,8 +36,10 @@ function AdminPage() {
   const tabs: { id: Tab; label: string; icon: typeof LayoutDashboard; adminOnly?: boolean }[] = [
     { id: "overview", label: "Overview", icon: LayoutDashboard },
     { id: "leads", label: "Enquiries", icon: Inbox },
+    { id: "courses", label: "Courses", icon: BookOpen },
+    { id: "faculty", label: "Faculty", icon: Users },
     { id: "alumni", label: "Alumni", icon: GraduationCap },
-    { id: "teachers", label: "Teachers", icon: UserCog, adminOnly: true },
+    { id: "teachers", label: "Teacher access", icon: UserCog, adminOnly: true },
   ];
 
   const visibleTabs = tabs.filter((t) => !t.adminOnly || role === "admin");
@@ -74,6 +78,8 @@ function AdminPage() {
         <motion.div key={tab} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
           {tab === "overview" && <Overview />}
           {tab === "leads" && <LeadsPanel role={role!} />}
+          {tab === "courses" && <CoursesPanel />}
+          {tab === "faculty" && <FacultyPanel />}
           {tab === "alumni" && <AlumniPanel />}
           {tab === "teachers" && role === "admin" && <TeachersPanel />}
         </motion.div>

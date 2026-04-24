@@ -56,6 +56,54 @@ export type Database = {
         }
         Relationships: []
       }
+      courses: {
+        Row: {
+          active: boolean
+          class_range: string
+          created_at: string
+          description: string
+          display_order: number
+          duration: string
+          exam: string
+          features: string[]
+          id: string
+          image_url: string | null
+          price: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          class_range: string
+          created_at?: string
+          description: string
+          display_order?: number
+          duration: string
+          exam: string
+          features?: string[]
+          id?: string
+          image_url?: string | null
+          price?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          class_range?: string
+          created_at?: string
+          description?: string
+          display_order?: number
+          duration?: string
+          exam?: string
+          features?: string[]
+          id?: string
+          image_url?: string | null
+          price?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       leads: {
         Row: {
           created_at: string
@@ -110,6 +158,48 @@ export type Database = {
           email?: string
           id?: string
           name?: string
+        }
+        Relationships: []
+      }
+      teachers: {
+        Row: {
+          bio: string | null
+          created_at: string
+          display_order: number
+          experience_years: number
+          id: string
+          image_url: string | null
+          name: string
+          qualification: string
+          subject: string
+          updated_at: string
+          visible: boolean
+        }
+        Insert: {
+          bio?: string | null
+          created_at?: string
+          display_order?: number
+          experience_years?: number
+          id?: string
+          image_url?: string | null
+          name: string
+          qualification: string
+          subject: string
+          updated_at?: string
+          visible?: boolean
+        }
+        Update: {
+          bio?: string | null
+          created_at?: string
+          display_order?: number
+          experience_years?: number
+          id?: string
+          image_url?: string | null
+          name?: string
+          qualification?: string
+          subject?: string
+          updated_at?: string
+          visible?: boolean
         }
         Relationships: []
       }
