@@ -1,62 +1,96 @@
 import { Canvas } from "@react-three/fiber";
-import { Environment, Sparkles } from "@react-three/drei";
-import { EffectComposer, Bloom, Vignette } from "@react-three/postprocessing";
+import { Environment, Float, ContactShadows } from "@react-three/drei";
 import { Suspense } from "react";
-import { Book } from "./Book";
-import { GraduationCap } from "./GraduationCap";
-import { Pencil } from "./Pencil";
-import { Trophy } from "./Trophy";
-import { CameraRig } from "./CameraRig";
+import * as THREE from "three";
+import { useRef } from "react";
+import { useFrame } from "@react-three/fiber";
 import { useIsMobile } from "@/hooks/use-mobile";
+
+function BookStack() {
+  const group = useRef<THREE.Group>(null!);
+  useFrame((s) => {
+    if (group.current) {
+      group.current.rotation.y = Math.sin(s.clock.elapsedTime * 0.3) * 0.25;
+    }
+  });
+
+  const books = [
+    { y: -0.9, color: "#6366f1", w: 2.2, d: 1.5, h: 0.32 },
+    { y: -0.55, color: "#ec4899", w: 2.0, d: 1.4, h: 0.3 },
+    { y: -0.23, color: "#06b6d4", w: 2.1, d: 1.45, h: 0.28 },
+    { y: 0.06, color: "#f59e0b", w: 1.9, d: 1.35, h: 0.26 },
+  ];
+
+  return (
+    <group ref={group} position={[0, 0, 0]}>
+      {books.map((b, i) => (
+        <group key={i} position={[Math.sin(i) * 0.05, b.y, Math.cos(i) * 0.05]} rotation={[0, i * 0.15 - 0.2, 0]}>
+          <mesh castShadow receiveShadow>
+            <boxGeometry args={[b.w, b.h, b.d]} />
+            <meshStandardMaterial color={b.color} roughness={0.45} metalness={0.15} />
+          </mesh>
+          {/* Pages */}
+          <mesh position={[0.02, 0, 0]}>
+            <boxGeometry args={[b.w - 0.06, b.h - 0.04, b.d - 0.06]} />
+            <meshStandardMaterial color="#fafafa" roughness={0.95} />
+          </mesh>
+        </group>
+      ))}
+      {/* Apple on top */}
+      <group position={[0, 0.45, 0]}>
+        <mesh castShadow>
+          <sphereGeometry args={[0.28, 32, 32]} />
+          <meshStandardMaterial color="#ef4444" roughness={0.3} metalness={0.2} />
+        </mesh>
+        <mesh position={[0.02, 0.28, 0]} rotation={[0, 0, 0.3]}>
+          <cylinderGeometry args={[0.025, 0.025, 0.16, 8]} />
+          <meshStandardMaterial color="#78350f" roughness={0.8} />
+        </mesh>
+        <mesh position={[0.12, 0.32, 0]} rotation={[0, 0, -0.5]}>
+          <sphereGeometry args={[0.08, 16, 16]} />
+          <meshStandardMaterial color="#22c55e" roughness={0.5} />
+        </mesh>
+      </group>
+    </group>
+  );
+}
 
 export function HeroScene() {
   const isMobile = useIsMobile();
 
   return (
     <Canvas
-      camera={{ position: [0, 0.4, 7], fov: 50 }}
+      camera={{ position: [3, 1.5, 5], fov: 42 }}
       dpr={[1, isMobile ? 1.25 : 1.75]}
       gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+      shadows
       className="!absolute inset-0"
     >
       <Suspense fallback={null}>
-        <color attach="background" args={["#00000000"]} />
+        <ambientLight intensity={0.6} />
+        <directionalLight
+          position={[5, 6, 4]}
+          intensity={1.6}
+          color="#fff8e7"
+          castShadow
+          shadow-mapSize={[1024, 1024]}
+        />
+        <pointLight position={[-4, 2, 3]} intensity={0.8} color="#a78bfa" />
+        <pointLight position={[3, -2, 2]} intensity={0.5} color="#f0abfc" />
+        <Environment preset="apartment" />
 
-        {/* Warm classroom-ish lighting */}
-        <ambientLight intensity={0.45} />
-        <pointLight position={[6, 6, 6]} intensity={1.8} color="#fde68a" />
-        <pointLight position={[-6, -2, 4]} intensity={1.2} color="#a78bfa" />
-        <pointLight position={[0, -5, -5]} intensity={0.8} color="#f0abfc" />
-        <Environment preset="city" />
+        <Float speed={1.2} rotationIntensity={0.15} floatIntensity={0.4}>
+          <BookStack />
+        </Float>
 
-        {/* Soft ambient sparkle (like dust in sunlight) */}
-        <Sparkles count={isMobile ? 50 : 120} scale={12} size={2} speed={0.25} color="#fde68a" opacity={0.5} />
-
-        {/* Centerpiece: Graduation cap + trophy */}
-        <GraduationCap position={[0, 0.6, 0]} scale={1.1} />
-        <Trophy position={[0, -1.1, 0.2]} scale={0.85} />
-
-        {/* Floating books around */}
-        <Book position={[-2.8, 1.4, -0.5]} rotation={[0.3, 0.4, 0.2]} color="#7c3aed" spineColor="#5b21b6" />
-        <Book position={[2.9, 1.2, -0.3]} rotation={[-0.2, -0.5, -0.15]} color="#06b6d4" spineColor="#0e7490" />
-        <Book position={[-2.5, -0.8, 0.8]} rotation={[0.1, 0.8, -0.1]} color="#ec4899" spineColor="#be185d" scale={0.85} />
-        <Book position={[2.6, -1.2, 0.6]} rotation={[-0.15, -0.7, 0.2]} color="#22c55e" spineColor="#15803d" scale={0.9} />
-        {!isMobile && <Book position={[-3.6, 0.2, -1.5]} rotation={[0.05, 0.3, 0.05]} color="#f59e0b" spineColor="#b45309" scale={0.8} />}
-        {!isMobile && <Book position={[3.6, 0.0, -1.5]} rotation={[0, -0.3, -0.05]} color="#ef4444" spineColor="#991b1b" scale={0.8} />}
-
-        {/* Pencils */}
-        <Pencil position={[-1.6, 2.0, 0.5]} rotation={[0, 0, Math.PI / 4]} scale={0.9} />
-        <Pencil position={[1.7, -2.0, 0.5]} rotation={[0, 0, -Math.PI / 5]} scale={0.85} />
-        {!isMobile && <Pencil position={[-3.8, -1.6, 0.2]} rotation={[0.2, 0.3, Math.PI / 3]} scale={0.7} />}
-
-        <CameraRig />
-
-        {!isMobile && (
-          <EffectComposer multisampling={0}>
-            <Bloom intensity={0.6} luminanceThreshold={0.6} luminanceSmoothing={0.9} mipmapBlur />
-            <Vignette eskil={false} offset={0.25} darkness={0.55} />
-          </EffectComposer>
-        )}
+        <ContactShadows
+          position={[0, -1.15, 0]}
+          opacity={0.45}
+          scale={8}
+          blur={2.4}
+          far={3}
+          color="#1e1b4b"
+        />
       </Suspense>
     </Canvas>
   );
