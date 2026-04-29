@@ -1,288 +1,132 @@
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { Float, Environment, ContactShadows, Sparkles, Text3D, Center } from "@react-three/drei";
-import { Suspense, useRef, useMemo } from "react";
-import * as THREE from "three";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { motion } from "framer-motion";
+import { GraduationCap, Trophy, Sparkles, BookOpen, Star, Award } from "lucide-react";
 
-const NAVY = "#0A1F44";
-const NAVY_DEEP = "#050f24";
-const GOLD = "#FFD700";
-const GOLD_DEEP = "#b8860b";
-const WHITE = "#ffffff";
-
-/* Metallic gold "A" letter built from extruded shape */
-function LetterA() {
-  const shape = useMemo(() => {
-    const s = new THREE.Shape();
-    // Outer A outline
-    s.moveTo(-0.9, -1);
-    s.lineTo(-0.45, -1);
-    s.lineTo(-0.28, -0.55);
-    s.lineTo(0.28, -0.55);
-    s.lineTo(0.45, -1);
-    s.lineTo(0.9, -1);
-    s.lineTo(0.18, 1);
-    s.lineTo(-0.18, 1);
-    s.closePath();
-
-    // Inner triangle hole
-    const hole = new THREE.Path();
-    hole.moveTo(-0.16, -0.25);
-    hole.lineTo(0.16, -0.25);
-    hole.lineTo(0, 0.45);
-    hole.closePath();
-    s.holes.push(hole);
-    return s;
-  }, []);
-
-  return (
-    <Center disableY>
-      <mesh castShadow receiveShadow>
-        <extrudeGeometry
-          args={[
-            shape,
-            {
-              depth: 0.28,
-              bevelEnabled: true,
-              bevelThickness: 0.06,
-              bevelSize: 0.05,
-              bevelSegments: 6,
-              curveSegments: 24,
-            },
-          ]}
-        />
-        <meshPhysicalMaterial
-          color={GOLD}
-          metalness={1}
-          roughness={0.18}
-          clearcoat={1}
-          clearcoatRoughness={0.1}
-          emissive={GOLD_DEEP}
-          emissiveIntensity={0.15}
-        />
-      </mesh>
-    </Center>
-  );
-}
-
-/* Orbiting ring around the emblem */
-function OrbitRing() {
-  const ref = useRef<THREE.Mesh>(null!);
-  useFrame((s) => {
-    if (ref.current) {
-      ref.current.rotation.z = s.clock.elapsedTime * 0.4;
-      ref.current.rotation.x = Math.PI / 2.2 + Math.sin(s.clock.elapsedTime * 0.3) * 0.08;
-    }
-  });
-  return (
-    <mesh ref={ref}>
-      <torusGeometry args={[1.55, 0.025, 32, 160]} />
-      <meshPhysicalMaterial
-        color={GOLD}
-        metalness={1}
-        roughness={0.15}
-        emissive={GOLD}
-        emissiveIntensity={0.4}
-      />
-    </mesh>
-  );
-}
-
-/* Glowing success star */
-function Star() {
-  const ref = useRef<THREE.Mesh>(null!);
-  const shape = useMemo(() => {
-    const s = new THREE.Shape();
-    const outer = 0.18;
-    const inner = 0.075;
-    const points = 5;
-    for (let i = 0; i < points * 2; i++) {
-      const r = i % 2 === 0 ? outer : inner;
-      const a = (i / (points * 2)) * Math.PI * 2 - Math.PI / 2;
-      const x = Math.cos(a) * r;
-      const y = Math.sin(a) * r;
-      if (i === 0) s.moveTo(x, y);
-      else s.lineTo(x, y);
-    }
-    s.closePath();
-    return s;
-  }, []);
-
-  useFrame((s) => {
-    if (ref.current) {
-      const t = s.clock.elapsedTime;
-      ref.current.rotation.z = t * 0.8;
-      ref.current.position.x = Math.cos(t * 0.6) * 1.55;
-      ref.current.position.y = 1.3 + Math.sin(t * 0.6) * 0.4;
-      ref.current.position.z = Math.sin(t * 0.6) * 0.5;
-    }
-  });
-
-  return (
-    <group ref={ref}>
-      <mesh>
-        <extrudeGeometry
-          args={[shape, { depth: 0.06, bevelEnabled: true, bevelThickness: 0.015, bevelSize: 0.015, bevelSegments: 2 }]}
-        />
-        <meshStandardMaterial
-          color={WHITE}
-          emissive={GOLD}
-          emissiveIntensity={2.2}
-          metalness={0.6}
-          roughness={0.15}
-        />
-      </mesh>
-      <pointLight color={GOLD} intensity={1.2} distance={2.5} />
-    </group>
-  );
-}
-
-/* Realistic book stack base */
-function BookStack() {
-  const books = [
-    { y: -1.55, color: NAVY, w: 2.6, d: 1.7, h: 0.22, rot: -0.05 },
-    { y: -1.32, color: "#13284f", w: 2.4, d: 1.6, h: 0.2, rot: 0.08 },
-    { y: -1.12, color: "#1a3361", w: 2.2, d: 1.5, h: 0.18, rot: -0.04 },
-  ];
-  return (
-    <group>
-      {books.map((b, i) => (
-        <group key={i} position={[0, b.y, 0]} rotation={[0, b.rot, 0]}>
-          {/* Cover */}
-          <mesh castShadow receiveShadow>
-            <boxGeometry args={[b.w, b.h, b.d]} />
-            <meshPhysicalMaterial
-              color={b.color}
-              roughness={0.55}
-              metalness={0.1}
-              clearcoat={0.4}
-              clearcoatRoughness={0.3}
-            />
-          </mesh>
-          {/* Pages */}
-          <mesh position={[0.025, 0, 0]}>
-            <boxGeometry args={[b.w - 0.06, b.h - 0.04, b.d - 0.05]} />
-            <meshStandardMaterial color="#f8f5ec" roughness={0.95} />
-          </mesh>
-          {/* Gold spine accent */}
-          <mesh position={[0, 0, b.d / 2 + 0.001]}>
-            <planeGeometry args={[b.w * 0.4, b.h * 0.3]} />
-            <meshStandardMaterial color={GOLD} emissive={GOLD_DEEP} emissiveIntensity={0.3} metalness={0.9} roughness={0.25} />
-          </mesh>
-        </group>
-      ))}
-    </group>
-  );
-}
-
-/* Premium gold trophy */
-function Trophy() {
-  return (
-    <group position={[2.2, -0.85, 0.3]} rotation={[0, -0.3, 0]} scale={0.85}>
-      {/* Cup */}
-      <mesh castShadow>
-        <cylinderGeometry args={[0.36, 0.22, 0.55, 32]} />
-        <meshPhysicalMaterial color={GOLD} metalness={1} roughness={0.15} clearcoat={1} clearcoatRoughness={0.08} />
-      </mesh>
-      {/* Handles */}
-      <mesh position={[0.4, 0.05, 0]} rotation={[0, 0, Math.PI / 2]}>
-        <torusGeometry args={[0.14, 0.04, 12, 24, Math.PI]} />
-        <meshPhysicalMaterial color={GOLD} metalness={1} roughness={0.15} />
-      </mesh>
-      <mesh position={[-0.4, 0.05, 0]} rotation={[0, 0, -Math.PI / 2]}>
-        <torusGeometry args={[0.14, 0.04, 12, 24, Math.PI]} />
-        <meshPhysicalMaterial color={GOLD} metalness={1} roughness={0.15} />
-      </mesh>
-      {/* Stem */}
-      <mesh position={[0, -0.4, 0]} castShadow>
-        <cylinderGeometry args={[0.07, 0.09, 0.22, 16]} />
-        <meshPhysicalMaterial color={GOLD_DEEP} metalness={1} roughness={0.2} />
-      </mesh>
-      {/* Base */}
-      <mesh position={[0, -0.55, 0]} castShadow>
-        <cylinderGeometry args={[0.28, 0.32, 0.1, 32]} />
-        <meshPhysicalMaterial color={GOLD_DEEP} metalness={1} roughness={0.25} />
-      </mesh>
-    </group>
-  );
-}
-
-/* Whole emblem grouped + animated */
-function Emblem() {
-  const group = useRef<THREE.Group>(null!);
-  useFrame((s) => {
-    if (group.current) {
-      group.current.rotation.y = Math.sin(s.clock.elapsedTime * 0.35) * 0.18;
-    }
-  });
-  return (
-    <group ref={group}>
-      <Float speed={1.1} rotationIntensity={0.08} floatIntensity={0.35}>
-        <group position={[0, 0.2, 0]}>
-          <LetterA />
-          <OrbitRing />
-        </group>
-      </Float>
-      <Star />
-      <BookStack />
-      <Trophy />
-    </group>
-  );
-}
-
-/* Parallax tilt driven by mouse */
-function ParallaxRig({ children }: { children: React.ReactNode }) {
-  const ref = useRef<THREE.Group>(null!);
-  const { mouse } = useThree();
-  useFrame(() => {
-    if (ref.current) {
-      ref.current.rotation.y += (mouse.x * 0.25 - ref.current.rotation.y) * 0.05;
-      ref.current.rotation.x += (-mouse.y * 0.15 - ref.current.rotation.x) * 0.05;
-    }
-  });
-  return <group ref={ref}>{children}</group>;
-}
-
+/**
+ * Premium animated hero visual — no WebGL.
+ * Concentric gold orbits, glowing core emblem, floating achievement chips,
+ * and ambient particles. Smooth, lightweight, eye-catching.
+ */
 export function HeroScene() {
-  const isMobile = useIsMobile();
-
   return (
-    <Canvas
-      camera={{ position: [0, 0.3, 6.2], fov: 40 }}
-      dpr={[1, isMobile ? 1.25 : 1.75]}
-      gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
-      shadows
-      className="!absolute inset-0"
-    >
-      <Suspense fallback={null}>
-        {/* Cinematic lighting */}
-        <ambientLight intensity={0.35} />
-        <directionalLight
-          position={[5, 6, 4]}
-          intensity={1.8}
-          color="#fff5d6"
-          castShadow
-          shadow-mapSize={[2048, 2048]}
-        />
-        <spotLight position={[-4, 5, 3]} intensity={1.2} angle={0.6} penumbra={1} color={GOLD} />
-        <pointLight position={[3, -2, 3]} intensity={0.5} color="#4d6fff" />
-        <Environment preset="studio" />
+    <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      {/* Ambient glows */}
+      <div className="absolute top-1/2 right-[18%] -translate-y-1/2 w-[560px] h-[560px] rounded-full bg-[radial-gradient(circle,rgba(255,215,0,0.22),transparent_60%)] blur-2xl" />
+      <div className="absolute top-[30%] right-[10%] w-[300px] h-[300px] rounded-full bg-[radial-gradient(circle,rgba(77,111,255,0.25),transparent_65%)] blur-3xl" />
 
-        <ParallaxRig>
-          <Emblem />
-        </ParallaxRig>
+      {/* Stage — right side on desktop, centered top on mobile */}
+      <div className="absolute inset-0 flex items-center justify-center lg:justify-end lg:pr-[8%]">
+        <div className="relative w-[420px] h-[420px] md:w-[520px] md:h-[520px]">
+          {/* Orbits */}
+          {[
+            { size: 100, dur: 28, reverse: false, opacity: 0.35 },
+            { size: 78, dur: 22, reverse: true, opacity: 0.5 },
+            { size: 56, dur: 16, reverse: false, opacity: 0.7 },
+          ].map((o, i) => (
+            <motion.div
+              key={i}
+              className="absolute inset-0 m-auto rounded-full border border-[#FFD700]"
+              style={{
+                width: `${o.size}%`,
+                height: `${o.size}%`,
+                opacity: o.opacity,
+                boxShadow: "0 0 40px rgba(255,215,0,0.15) inset",
+              }}
+              animate={{ rotate: o.reverse ? -360 : 360 }}
+              transition={{ duration: o.dur, repeat: Infinity, ease: "linear" }}
+            >
+              {/* Orbit beads */}
+              <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-[#FFD700] shadow-[0_0_18px_6px_rgba(255,215,0,0.55)]" />
+              {i === 1 && (
+                <div className="absolute top-1/2 -right-1.5 -translate-y-1/2 w-2 h-2 rounded-full bg-white shadow-[0_0_14px_4px_rgba(255,255,255,0.7)]" />
+              )}
+            </motion.div>
+          ))}
 
-        <Sparkles count={50} scale={[6, 4, 3]} size={2.2} speed={0.4} color={GOLD} opacity={0.9} />
+          {/* Dashed outer ring */}
+          <motion.div
+            className="absolute inset-0 rounded-full border border-dashed border-white/15"
+            animate={{ rotate: 360 }}
+            transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+          />
 
-        <ContactShadows
-          position={[0, -1.85, 0]}
-          opacity={0.6}
-          scale={10}
-          blur={2.6}
-          far={3}
-          color={NAVY_DEEP}
-        />
-      </Suspense>
-    </Canvas>
+          {/* Core emblem */}
+          <motion.div
+            initial={{ scale: 0.85, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 1, ease: "easeOut" }}
+            className="absolute inset-0 m-auto w-[44%] h-[44%] rounded-full flex items-center justify-center"
+            style={{
+              background:
+                "radial-gradient(circle at 30% 30%, #fff7c2 0%, #FFD700 35%, #b8860b 75%, #6b4f00 100%)",
+              boxShadow:
+                "0 30px 80px -20px rgba(255,215,0,0.55), 0 0 0 1px rgba(255,255,255,0.25) inset, 0 -10px 40px rgba(0,0,0,0.35) inset",
+            }}
+          >
+            <motion.div
+              animate={{ rotate: [0, -6, 6, 0] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+              className="flex flex-col items-center"
+            >
+              <GraduationCap className="h-16 w-16 md:h-20 md:w-20 text-[#0A1F44] drop-shadow-md" strokeWidth={2.2} />
+              <div className="mt-1 text-[10px] md:text-xs font-bold tracking-[0.2em] text-[#0A1F44]/80">
+                ACHIEVERS
+              </div>
+            </motion.div>
+
+            {/* Specular highlight */}
+            <div className="absolute top-3 left-6 w-14 h-6 rounded-full bg-white/50 blur-md rotate-[-20deg]" />
+          </motion.div>
+
+          {/* Floating achievement chips */}
+          {[
+            { icon: Trophy, label: "Toppers", x: "8%", y: "12%", delay: 0.2, color: "#FFD700" },
+            { icon: Star, label: "94% Success", x: "78%", y: "18%", delay: 0.4, color: "#FFD700" },
+            { icon: BookOpen, label: "JEE · NEET", x: "4%", y: "70%", delay: 0.6, color: "#ffffff" },
+            { icon: Award, label: "Olympiad", x: "76%", y: "74%", delay: 0.8, color: "#FFD700" },
+          ].map((chip, i) => (
+            <motion.div
+              key={chip.label}
+              initial={{ opacity: 0, y: 20, scale: 0.8 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{ delay: chip.delay, duration: 0.7, ease: "easeOut" }}
+              className="absolute"
+              style={{ left: chip.x, top: chip.y }}
+            >
+              <motion.div
+                animate={{ y: [0, -10, 0] }}
+                transition={{ duration: 4 + i, repeat: Infinity, ease: "easeInOut", delay: i * 0.3 }}
+                className="flex items-center gap-2 px-3 py-2 rounded-2xl border border-white/15 bg-white/[0.06] backdrop-blur-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.5)]"
+              >
+                <chip.icon className="h-4 w-4" style={{ color: chip.color }} />
+                <span className="text-xs font-medium text-white whitespace-nowrap">{chip.label}</span>
+              </motion.div>
+            </motion.div>
+          ))}
+
+          {/* Sparkle particles */}
+          {Array.from({ length: 14 }).map((_, i) => {
+            const left = (i * 73) % 100;
+            const top = (i * 47) % 100;
+            const dur = 3 + (i % 4);
+            return (
+              <motion.div
+                key={i}
+                className="absolute w-1 h-1 rounded-full bg-[#FFD700]"
+                style={{
+                  left: `${left}%`,
+                  top: `${top}%`,
+                  boxShadow: "0 0 8px 2px rgba(255,215,0,0.7)",
+                }}
+                animate={{ opacity: [0, 1, 0], scale: [0.5, 1.4, 0.5] }}
+                transition={{ duration: dur, repeat: Infinity, delay: i * 0.25 }}
+              />
+            );
+          })}
+
+          {/* Subtle corner sparkle icon */}
+          <Sparkles className="absolute top-2 right-6 h-5 w-5 text-[#FFD700]/70 animate-pulse" />
+        </div>
+      </div>
+    </div>
   );
 }
