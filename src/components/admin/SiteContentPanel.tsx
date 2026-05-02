@@ -3,7 +3,8 @@ import { Save } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
-interface Block { id: string; block_key: string; title: string | null; body: string | null; data: Record<string, unknown>; }
+type Json = string | number | boolean | null | { [k: string]: Json } | Json[];
+interface Block { id: string; block_key: string; title: string | null; body: string | null; data: Json; }
 
 const BLOCKS = [
   { key: "hero", label: "Hero section", fields: [{ k: "badge", label: "Badge text" }] },
@@ -52,7 +53,7 @@ export function SiteContentPanel() {
       <div className="space-y-4">
         {BLOCKS.map((cfg) => {
           const b = blocks[cfg.key];
-          const data = (b?.data ?? {}) as Record<string, string>;
+          const data = (b?.data ?? {}) as unknown as Record<string, string>;
           return (
             <div key={cfg.key} className="glass-strong rounded-2xl p-5 space-y-3">
               <h3 className="font-display font-bold">{cfg.label}</h3>

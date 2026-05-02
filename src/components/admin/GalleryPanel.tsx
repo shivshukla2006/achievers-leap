@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Plus, Trash2, Eye, EyeOff, X } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { uploadImage } from "@/lib/uploadImage";
+import { uploadSiteImage } from "@/lib/uploadImage";
 
 interface Item { id: string; image_url: string; caption: string | null; category: string | null; display_order: number; visible: boolean; }
 
@@ -20,7 +20,7 @@ export function GalleryPanel() {
   const onFile = async (file: File) => {
     setUploading(true);
     try {
-      const url = await uploadImage(file, "gallery");
+      const url = await uploadSiteImage(file, "gallery");
       setEditing({ ...editing, image_url: url });
     } catch (e) { toast.error((e as Error).message); }
     finally { setUploading(false); }

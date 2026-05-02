@@ -65,7 +65,7 @@ export function LeadsPanel({ role, mineOnly = false }: { role: "admin" | "teache
   };
 
   const updateLead = async (id: string, patch: Partial<Lead>) => {
-    const updates: Record<string, unknown> = { ...patch };
+    const updates: Partial<Lead> = { ...patch };
     if (patch.status === "contacted" || patch.status === "follow-up") {
       updates.last_contacted_at = new Date().toISOString();
     }
