@@ -56,6 +56,42 @@ export type Database = {
         }
         Relationships: []
       }
+      announcements: {
+        Row: {
+          active: boolean
+          body: string
+          created_at: string
+          ends_at: string | null
+          id: string
+          starts_at: string | null
+          title: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          body: string
+          created_at?: string
+          ends_at?: string | null
+          id?: string
+          starts_at?: string | null
+          title: string
+          type?: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          body?: string
+          created_at?: string
+          ends_at?: string | null
+          id?: string
+          starts_at?: string | null
+          title?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       courses: {
         Row: {
           active: boolean
@@ -104,39 +140,188 @@ export type Database = {
         }
         Relationships: []
       }
+      faqs: {
+        Row: {
+          answer: string
+          category: string | null
+          created_at: string
+          display_order: number
+          id: string
+          question: string
+          updated_at: string
+          visible: boolean
+        }
+        Insert: {
+          answer: string
+          category?: string | null
+          created_at?: string
+          display_order?: number
+          id?: string
+          question: string
+          updated_at?: string
+          visible?: boolean
+        }
+        Update: {
+          answer?: string
+          category?: string | null
+          created_at?: string
+          display_order?: number
+          id?: string
+          question?: string
+          updated_at?: string
+          visible?: boolean
+        }
+        Relationships: []
+      }
+      gallery: {
+        Row: {
+          caption: string | null
+          category: string | null
+          created_at: string
+          display_order: number
+          id: string
+          image_url: string
+          visible: boolean
+        }
+        Insert: {
+          caption?: string | null
+          category?: string | null
+          created_at?: string
+          display_order?: number
+          id?: string
+          image_url: string
+          visible?: boolean
+        }
+        Update: {
+          caption?: string | null
+          category?: string | null
+          created_at?: string
+          display_order?: number
+          id?: string
+          image_url?: string
+          visible?: boolean
+        }
+        Relationships: []
+      }
+      lead_notes: {
+        Row: {
+          author_id: string
+          author_name: string
+          created_at: string
+          id: string
+          lead_id: string
+          note: string
+        }
+        Insert: {
+          author_id: string
+          author_name: string
+          created_at?: string
+          id?: string
+          lead_id: string
+          note: string
+        }
+        Update: {
+          author_id?: string
+          author_name?: string
+          created_at?: string
+          id?: string
+          lead_id?: string
+          note?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_notes_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       leads: {
         Row: {
+          assigned_to: string | null
+          course_interest: string | null
           created_at: string
           email: string
           exam: string
           id: string
+          last_contacted_at: string | null
           message: string | null
           name: string
           phone: string
+          priority: string
+          source: string | null
           status: string
           student_class: string
+          updated_at: string
         }
         Insert: {
+          assigned_to?: string | null
+          course_interest?: string | null
           created_at?: string
           email: string
           exam: string
           id?: string
+          last_contacted_at?: string | null
           message?: string | null
           name: string
           phone: string
+          priority?: string
+          source?: string | null
           status?: string
           student_class: string
+          updated_at?: string
         }
         Update: {
+          assigned_to?: string | null
+          course_interest?: string | null
           created_at?: string
           email?: string
           exam?: string
           id?: string
+          last_contacted_at?: string | null
           message?: string | null
           name?: string
           phone?: string
+          priority?: string
+          source?: string | null
           status?: string
           student_class?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      notifications: {
+        Row: {
+          body: string | null
+          created_at: string
+          id: string
+          link: string | null
+          read: boolean
+          recipient_id: string
+          title: string
+          type: string
+        }
+        Insert: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          link?: string | null
+          read?: boolean
+          recipient_id: string
+          title: string
+          type: string
+        }
+        Update: {
+          body?: string | null
+          created_at?: string
+          id?: string
+          link?: string | null
+          read?: boolean
+          recipient_id?: string
+          title?: string
+          type?: string
         }
         Relationships: []
       }
@@ -161,6 +346,33 @@ export type Database = {
         }
         Relationships: []
       }
+      site_content: {
+        Row: {
+          block_key: string
+          body: string | null
+          data: Json
+          id: string
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          block_key: string
+          body?: string | null
+          data?: Json
+          id?: string
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          block_key?: string
+          body?: string | null
+          data?: Json
+          id?: string
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       teachers: {
         Row: {
           bio: string | null
@@ -173,6 +385,7 @@ export type Database = {
           qualification: string
           subject: string
           updated_at: string
+          user_id: string | null
           visible: boolean
         }
         Insert: {
@@ -186,6 +399,7 @@ export type Database = {
           qualification: string
           subject: string
           updated_at?: string
+          user_id?: string | null
           visible?: boolean
         }
         Update: {
@@ -199,6 +413,7 @@ export type Database = {
           qualification?: string
           subject?: string
           updated_at?: string
+          user_id?: string | null
           visible?: boolean
         }
         Relationships: []
@@ -229,6 +444,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      current_teacher_id: { Args: never; Returns: string }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
