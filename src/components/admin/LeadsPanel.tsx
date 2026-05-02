@@ -65,11 +65,11 @@ export function LeadsPanel({ role, mineOnly = false }: { role: "admin" | "teache
   };
 
   const updateLead = async (id: string, patch: Partial<Lead>) => {
-    const updates: Partial<Lead> = { ...patch };
+    const updates: Record<string, string | null> = { ...(patch as Record<string, string | null>) };
     if (patch.status === "contacted" || patch.status === "follow-up") {
       updates.last_contacted_at = new Date().toISOString();
     }
-    const { error } = await supabase.from("leads").update(updates).eq("id", id);
+    const { error } = await supabase.from("leads").update(updates as never).eq("id", id);
     if (error) return toast.error(error.message);
     toast.success("Updated");
     load();
