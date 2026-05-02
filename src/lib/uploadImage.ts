@@ -1,6 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 
-export async function uploadSiteImage(file: File, folder: "alumni" | "teachers" | "courses"): Promise<string> {
+export async function uploadSiteImage(file: File, folder: string): Promise<string> {
   const ext = file.name.split(".").pop()?.toLowerCase() ?? "jpg";
   const path = `${folder}/${crypto.randomUUID()}.${ext}`;
   const { error } = await supabase.storage.from("site-images").upload(path, file, {
