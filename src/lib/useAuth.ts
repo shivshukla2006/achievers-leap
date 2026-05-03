@@ -9,28 +9,39 @@ export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [role, setRole] = useState<Role>(null);
   const [loading, setLoading] = useState(true);
+  const [roleLoading, setRoleLoading] = useState(true);
 
   useEffect(() => {
+    const fetchRole = async (uid: string) => {
+      setRoleLoading(true);
+      // small delay & retry — the signup trigger may be inserting the row
+      let roles: string[] = [];
+      for (let i = 0; i < 5; i++) {
+        const { data } = await supabase.from("user_roles").select("role").eq("user_id", uid);
+        roles = (data ?? []).map((r) => r.role);
+        if (roles.length > 0) break;
+        await new Promise((r) => setTimeout(r, 400));
+      }
+      setRole(roles.includes("admin") ? "admin" : roles.includes("teacher") ? "teacher" : null);
+      setRoleLoading(false);
+    };
+
     const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
       setUser(session?.user ?? null);
       if (session?.user) {
-        // defer role fetch to avoid auth deadlock
-        setTimeout(async () => {
-          const { data } = await supabase.from("user_roles").select("role").eq("user_id", session.user!.id);
-          const roles = (data ?? []).map((r) => r.role);
-          setRole(roles.includes("admin") ? "admin" : roles.includes("teacher") ? "teacher" : null);
-        }, 0);
+        setTimeout(() => fetchRole(session.user!.id), 0);
       } else {
         setRole(null);
+        setRoleLoading(false);
       }
     });
 
     supabase.auth.getSession().then(async ({ data: { session } }) => {
       setUser(session?.user ?? null);
       if (session?.user) {
-        const { data } = await supabase.from("user_roles").select("role").eq("user_id", session.user.id);
-        const roles = (data ?? []).map((r) => r.role);
-        setRole(roles.includes("admin") ? "admin" : roles.includes("teacher") ? "teacher" : null);
+        await fetchRole(session.user.id);
+      } else {
+        setRoleLoading(false);
       }
       setLoading(false);
     });
@@ -38,7 +49,7 @@ export function useAuth() {
     return () => sub.subscription.unsubscribe();
   }, []);
 
-  return { user, role, loading };
+  return { user, role, loading: loading || roleLoading };
 }
 
 export function useRequireRole(required: ("admin" | "teacher")[]) {
