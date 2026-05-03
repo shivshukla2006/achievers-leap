@@ -4,7 +4,10 @@ import { Hero } from "@/components/sections/Hero";
 import { Courses } from "@/components/sections/Courses";
 import { Faculty } from "@/components/sections/Faculty";
 import { Alumni } from "@/components/sections/Alumni";
+import { Gallery } from "@/components/sections/Gallery";
+import { FAQs } from "@/components/sections/FAQs";
 import { EnquiryForm } from "@/components/sections/EnquiryForm";
+import { AnnouncementBar } from "@/components/sections/AnnouncementBar";
 import { Footer } from "@/components/Footer";
 
 export const Route = createFileRoute("/")({
