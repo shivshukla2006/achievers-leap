@@ -25,12 +25,15 @@ export const Route = createFileRoute("/")({
 function Index() {
   return (
     <div className="min-h-screen">
+      <AnnouncementBar />
       <Navbar />
       <main>
         <Hero />
         <Courses />
         <Faculty />
         <Alumni />
+        <Gallery />
+        <FAQs />
         <EnquiryForm />
       </main>
       <Footer />
