@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Sparkles, LogOut, LayoutDashboard, Inbox, GraduationCap, UserCog, Loader2, BookOpen, Users } from "lucide-react";
+import { Sparkles, LogOut, LayoutDashboard, Inbox, GraduationCap, UserCog, Loader2, BookOpen, Users, BarChart3, HelpCircle, Image as ImageIcon, Megaphone, FileText } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/useAuth";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -11,13 +11,19 @@ import { AlumniPanel } from "@/components/admin/AlumniPanel";
 import { TeachersPanel } from "@/components/admin/TeachersPanel";
 import { CoursesPanel } from "@/components/admin/CoursesPanel";
 import { FacultyPanel } from "@/components/admin/FacultyPanel";
+import { AnalyticsPanel } from "@/components/admin/AnalyticsPanel";
+import { FaqsPanel } from "@/components/admin/FaqsPanel";
+import { GalleryPanel } from "@/components/admin/GalleryPanel";
+import { AnnouncementsPanel } from "@/components/admin/AnnouncementsPanel";
+import { SiteContentPanel } from "@/components/admin/SiteContentPanel";
+import { NotificationsBell } from "@/components/admin/NotificationsBell";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({ meta: [{ title: "Admin Dashboard — Academic Achievers" }, { name: "robots", content: "noindex" }] }),
   component: AdminPage,
 });
 
-type Tab = "overview" | "leads" | "courses" | "faculty" | "alumni" | "teachers";
+type Tab = "overview" | "leads" | "analytics" | "courses" | "faculty" | "alumni" | "teachers" | "faqs" | "gallery" | "announcements" | "content";
 
 function AdminPage() {
   const { user, role, loading } = useAuth();
@@ -36,9 +42,14 @@ function AdminPage() {
   const tabs: { id: Tab; label: string; icon: typeof LayoutDashboard; adminOnly?: boolean }[] = [
     { id: "overview", label: "Overview", icon: LayoutDashboard },
     { id: "leads", label: "Enquiries", icon: Inbox },
+    { id: "analytics", label: "Analytics", icon: BarChart3, adminOnly: true },
     { id: "courses", label: "Courses", icon: BookOpen },
     { id: "faculty", label: "Faculty", icon: Users },
     { id: "alumni", label: "Alumni", icon: GraduationCap },
+    { id: "announcements", label: "Announcements", icon: Megaphone, adminOnly: true },
+    { id: "faqs", label: "FAQs", icon: HelpCircle, adminOnly: true },
+    { id: "gallery", label: "Gallery", icon: ImageIcon, adminOnly: true },
+    { id: "content", label: "Site content", icon: FileText, adminOnly: true },
     { id: "teachers", label: "Teacher access", icon: UserCog, adminOnly: true },
   ];
 
@@ -56,6 +67,7 @@ function AdminPage() {
             <span className="text-xs glass px-2 py-0.5 rounded-full ml-2 capitalize">{role}</span>
           </Link>
           <div className="flex items-center gap-2">
+            <NotificationsBell />
             <ThemeToggle />
             <button onClick={async () => { await supabase.auth.signOut(); navigate({ to: "/" }); }}
               className="glass rounded-full px-4 h-10 flex items-center gap-2 text-sm hover:scale-105 transition-transform">
@@ -78,9 +90,14 @@ function AdminPage() {
         <motion.div key={tab} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
           {tab === "overview" && <Overview />}
           {tab === "leads" && <LeadsPanel role={role!} />}
+          {tab === "analytics" && role === "admin" && <AnalyticsPanel />}
           {tab === "courses" && <CoursesPanel />}
           {tab === "faculty" && <FacultyPanel />}
           {tab === "alumni" && <AlumniPanel />}
+          {tab === "announcements" && role === "admin" && <AnnouncementsPanel />}
+          {tab === "faqs" && role === "admin" && <FaqsPanel />}
+          {tab === "gallery" && role === "admin" && <GalleryPanel />}
+          {tab === "content" && role === "admin" && <SiteContentPanel />}
           {tab === "teachers" && role === "admin" && <TeachersPanel />}
         </motion.div>
       </div>
