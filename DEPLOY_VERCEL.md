@@ -1,44 +1,37 @@
 # Deploying to Vercel
 
-This project is a TanStack Start app. It runs on Lovable's hosting by default
-(Cloudflare Workers under the hood). The config below also lets you deploy the
-exact same codebase to Vercel.
+This TanStack Start project deploys to Lovable (Cloudflare) by default. The
+config below also lets the same code deploy to Vercel as a static SPA.
 
 ## How it works
 
-`vite.config.ts` checks for the `VERCEL=1` environment variable (Vercel sets
-this automatically during builds). When present, it:
+- `vite.config.ts` checks for `VERCEL=1` (Vercel sets this automatically).
+  When present, it disables the Cloudflare plugin and turns on TanStack
+  Start's SPA mode (`tanstackStart.spa.enabled = true`), which produces
+  `dist/client/_shell.html` — a static HTML shell that hydrates into the full
+  React app on the client.
+- `vercel.json` copies `_shell.html` to `index.html` after build, sets
+  `dist/client` as the output directory, and rewrites every URL to
+  `index.html` so client-side routing works on refresh / deep links.
 
-1. Disables the Cloudflare plugin from the Lovable preset.
-2. Tells TanStack Start to use the `vercel` deployment target, which emits the
-   Vercel Build Output API in `.vercel/output/`.
-
-`vercel.json` points Vercel at that output directory.
-
-Locally, none of this changes — `bun run dev` and `bun run build` still target
-Cloudflare for Lovable's preview/publish.
+This app makes ALL data calls through the browser Supabase client, so a
+SPA build is fully functional — no SSR or server functions are needed.
 
 ## One-time setup on Vercel
 
 1. Push this repo to GitHub (use Lovable's GitHub sync).
-2. In Vercel, **New Project → Import** the repo.
-3. Framework preset: **Other** (the `vercel.json` already configures everything).
-4. Add Environment Variables (copy from your `.env`):
+2. In Vercel: **New Project → Import** the repo.
+3. Framework preset: **Other**. `vercel.json` configures the rest.
+4. Add Environment Variables (copy from your local `.env`):
    - `VITE_SUPABASE_URL`
    - `VITE_SUPABASE_PUBLISHABLE_KEY`
    - `VITE_SUPABASE_PROJECT_ID`
-   - `SUPABASE_URL`
-   - `SUPABASE_PUBLISHABLE_KEY`
-   - `SUPABASE_SERVICE_ROLE_KEY` (server-only — do NOT prefix with `VITE_`)
-   - Any other secrets your server functions read from `process.env`.
-5. Deploy. Vercel will run `bun install && bun run build`, detect `VERCEL=1`,
-   and produce the Vercel Build Output that supports SSR + server functions.
+5. Deploy. Vercel runs `bun install && bun run build`, sees `VERCEL=1`,
+   produces `dist/client/`, and serves it as a SPA.
 
 ## Notes
 
-- Server functions (`createServerFn`) work on Vercel as Node.js serverless
-  functions. No code changes required.
-- Lovable Cloud (Supabase) keeps working — it's just an external API from
-  Vercel's perspective.
-- Lovable's "Publish" button still deploys to Lovable hosting independently.
-  You can keep both deployments running side by side.
+- Lovable's "Publish" still deploys to Lovable hosting independently — both
+  deployments can run side by side from the same repo.
+- Backend (Lovable Cloud / Supabase) is unchanged: it's an external API from
+  Vercel's perspective and works the same way.
