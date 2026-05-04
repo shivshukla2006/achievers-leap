@@ -3,18 +3,21 @@
 //   - tanstackStart, viteReact, tailwindcss, tsConfigPaths, cloudflare (build-only),
 //     componentTagger (dev-only), VITE_* env injection, @ path alias, React/TanStack dedupe,
 //     error logger plugins, and sandbox detection (port/host/strictPort).
-// You can pass additional config via defineConfig({ vite: { ... } }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
-// When deploying to Vercel, set VERCEL=1 (Vercel sets this automatically).
-// In that case we disable the Cloudflare plugin and target Vercel via tanstackStart.
+// On Vercel (env var VERCEL=1 is set automatically) we disable the Cloudflare
+// plugin and enable TanStack Start's SPA mode so a static build with index.html
+// is emitted that Vercel can serve. SSR-less is fine for this app — every
+// data call goes through the browser Supabase client.
 const isVercel = !!process.env.VERCEL;
 
 export default defineConfig(
   isVercel
     ? {
         cloudflare: false,
-        tanstackStart: { target: "vercel" },
+        tanstackStart: {
+          spa: { enabled: true },
+        },
       }
     : {},
 );
