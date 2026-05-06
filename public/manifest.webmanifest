@@ -1,0 +1,14 @@
+{
+  "name": "Academic Achievers",
+  "short_name": "Achievers",
+  "description": "Coaching institute for Class 1–12. JEE, NEET, Boards & Olympiads.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0A1F44",
+  "theme_color": "#0A1F44",
+  "icons": [
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
