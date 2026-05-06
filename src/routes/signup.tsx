@@ -50,7 +50,7 @@ function SignupPage() {
         <ArrowLeft className="h-4 w-4" /> Home
       </Link>
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-        className="glass-strong rounded-3xl p-8 w-full max-w-md shadow-glow">
+        className="glass-strong rounded-3xl p-8 w-full max-w-md shadow-glow relative z-10">
         <div className="flex items-center gap-2 justify-center mb-6">
           <div className="h-10 w-10 rounded-xl bg-gradient-primary flex items-center justify-center shadow-glow">
             <Sparkles className="h-5 w-5 text-primary-foreground" />
