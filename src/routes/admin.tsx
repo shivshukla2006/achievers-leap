@@ -57,7 +57,9 @@ function AdminPage() {
   const visibleTabs = tabs.filter((t) => !t.adminOnly || role === "admin");
 
   return (
-    <div className="min-h-screen bg-hero">
+    <div className="min-h-screen relative bg-cover bg-center bg-fixed" style={{ backgroundImage: `url(${signupBg})` }}>
+      <div className="absolute inset-0 bg-background/80 backdrop-blur-sm pointer-events-none" />
+      <div className="relative z-10">
       <header className="sticky top-0 z-40 glass-strong border-b border-border/50">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
@@ -101,6 +103,7 @@ function AdminPage() {
           {tab === "content" && role === "admin" && <SiteContentPanel />}
           {tab === "teachers" && role === "admin" && <TeachersPanel />}
         </motion.div>
+      </div>
       </div>
     </div>
   );
