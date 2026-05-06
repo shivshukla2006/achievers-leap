@@ -44,8 +44,9 @@ function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-hero grid-bg flex items-center justify-center p-4 relative">
-      <Link to="/" className="absolute top-6 left-6 glass rounded-full px-4 h-10 flex items-center gap-2 text-sm">
+    <div className="min-h-screen flex items-center justify-center p-4 relative bg-cover bg-center" style={{ backgroundImage: `url(${signupBg})` }}>
+      <div className="absolute inset-0 bg-background/70 backdrop-blur-sm" />
+      <Link to="/" className="absolute top-6 left-6 glass rounded-full px-4 h-10 flex items-center gap-2 text-sm z-10">
         <ArrowLeft className="h-4 w-4" /> Home
       </Link>
       <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
