@@ -4,7 +4,7 @@ import { HeroScene } from "@/components/three/HeroScene";
 
 const stats = [
   { icon: Users, value: "25K+", label: "Students enrolled" },
-  { icon: Trophy, value: "94%", label: "Success rate" },
+  { icon: Trophy, value: "100%", label: "Success rate" },
   { icon: TrendingUp, value: "+38%", label: "Avg. score uplift" },
 ];
 
