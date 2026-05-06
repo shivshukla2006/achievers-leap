@@ -1,6 +1,7 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { Toaster } from "sonner";
+import { PWAInstallPrompt } from "@/components/PWAInstallPrompt";
 
 import appCss from "../styles.css?url";
 
