@@ -78,7 +78,8 @@ function RootComponent() {
   return (
     <ThemeProvider>
       <Outlet />
-      <Toaster position="top-center" richColors theme="system" />
+      <PWAInstallPrompt />
+      <Toaster position="top-center" richColors theme="dark" />
     </ThemeProvider>
   );
 }

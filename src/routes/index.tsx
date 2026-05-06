@@ -9,6 +9,7 @@ import { FAQs } from "@/components/sections/FAQs";
 import { EnquiryForm } from "@/components/sections/EnquiryForm";
 import { AnnouncementBar } from "@/components/sections/AnnouncementBar";
 import { Footer } from "@/components/Footer";
+import signupBg from "@/assets/signup-bg.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -29,12 +30,17 @@ function Index() {
       <Navbar />
       <main>
         <Hero />
-        <Courses />
-        <Faculty />
-        <Alumni />
-        <Gallery />
-        <FAQs />
-        <EnquiryForm />
+        <div className="relative bg-cover bg-center bg-fixed" style={{ backgroundImage: `url(${signupBg})` }}>
+          <div className="absolute inset-0 bg-background/85 backdrop-blur-sm pointer-events-none" />
+          <div className="relative z-10">
+            <Courses />
+            <Faculty />
+            <Alumni />
+            <Gallery />
+            <FAQs />
+            <EnquiryForm />
+          </div>
+        </div>
       </main>
       <Footer />
     </div>
