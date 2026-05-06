@@ -181,7 +181,7 @@ export function HeroScene() {
           {/* Floating achievement chips — front layer */}
           {[
             { icon: Trophy, label: "Toppers", x: "6%", y: "10%", delay: 0.2, color: "#FFD700", z: 60 },
-            { icon: Star, label: "94% Success", x: "78%", y: "14%", delay: 0.35, color: "#FFD700", z: 90 },
+            { icon: Star, label: "100% Success", x: "78%", y: "14%", delay: 0.35, color: "#FFD700", z: 90 },
             { icon: BookOpen, label: "JEE · NEET", x: "2%", y: "68%", delay: 0.5, color: "#ffffff", z: 50 },
             { icon: Award, label: "Olympiad", x: "76%", y: "76%", delay: 0.65, color: "#FFD700", z: 70 },
             { icon: Atom, label: "Science", x: "44%", y: "-2%", delay: 0.8, color: "#a5b4fc", z: 100 },
