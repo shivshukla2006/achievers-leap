@@ -10,7 +10,7 @@ const stats = [
 
 export function Hero() {
   return (
-    <section className="relative min-h-[100svh] pt-32 pb-16 overflow-hidden bg-hero text-white">
+    <section className="relative min-h-[100svh] pt-28 md:pt-32 pb-12 md:pb-16 overflow-hidden bg-hero text-white">
       <div className="absolute inset-0 grid-bg pointer-events-none opacity-40" />
       <div className="absolute inset-0">
         <HeroScene />
@@ -29,13 +29,13 @@ export function Hero() {
             <span className="h-2 w-2 rounded-full bg-[#FFD700] animate-pulse-glow" />
             Academic Achievers · Class 1 → 12
           </div>
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.05] tracking-tight">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.05] tracking-tight">
             <span className="block text-white">Learn. Achieve.</span>
             <span className="block bg-gradient-to-r from-[#FFD700] via-[#fff1a8] to-[#FFD700] bg-clip-text text-transparent">
               Succeed.
             </span>
           </h1>
-          <p className="text-lg text-white/75 max-w-lg leading-relaxed">
+          <p className="text-base md:text-lg text-white/75 max-w-lg leading-relaxed">
             India's most trusted coaching for academic excellence. Expert faculty, small batches and
             a proven track record of toppers in JEE, NEET, Boards & Olympiads.
           </p>
