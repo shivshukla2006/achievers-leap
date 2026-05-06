@@ -4,6 +4,7 @@ import { Sparkles, Shield, GraduationCap, ArrowLeft } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import signupBg from "@/assets/signup-bg.jpg";
 
 export const Route = createFileRoute("/login")({
   head: () => ({
@@ -43,13 +44,14 @@ function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-hero grid-bg flex items-center justify-center p-4 relative overflow-hidden">
-      <Link to="/" className="absolute top-6 left-6 glass rounded-full px-4 h-10 flex items-center gap-2 text-sm hover:scale-105 transition-transform">
+    <div className="min-h-screen flex items-center justify-center p-4 relative overflow-hidden bg-cover bg-center" style={{ backgroundImage: `url(${signupBg})` }}>
+      <div className="absolute inset-0 bg-background/70 backdrop-blur-sm" />
+      <Link to="/" className="absolute top-6 left-6 glass rounded-full px-4 h-10 flex items-center gap-2 text-sm hover:scale-105 transition-transform z-10">
         <ArrowLeft className="h-4 w-4" /> Home
       </Link>
       <motion.div
         initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-        className="glass-strong rounded-3xl p-8 w-full max-w-md shadow-glow"
+        className="glass-strong rounded-3xl p-8 w-full max-w-md shadow-glow relative z-10"
       >
         <div className="flex items-center gap-2 justify-center mb-6">
           <div className="h-10 w-10 rounded-xl bg-gradient-primary flex items-center justify-center shadow-glow">

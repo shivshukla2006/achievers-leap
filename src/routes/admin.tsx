@@ -17,6 +17,7 @@ import { GalleryPanel } from "@/components/admin/GalleryPanel";
 import { AnnouncementsPanel } from "@/components/admin/AnnouncementsPanel";
 import { SiteContentPanel } from "@/components/admin/SiteContentPanel";
 import { NotificationsBell } from "@/components/admin/NotificationsBell";
+import signupBg from "@/assets/signup-bg.jpg";
 
 export const Route = createFileRoute("/admin")({
   head: () => ({ meta: [{ title: "Admin Dashboard — Academic Achievers" }, { name: "robots", content: "noindex" }] }),
