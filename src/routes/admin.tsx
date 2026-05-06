@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Sparkles, LogOut, LayoutDashboard, Inbox, GraduationCap, UserCog, Loader2, BookOpen, Users, BarChart3, HelpCircle, Image as ImageIcon, Megaphone, FileText } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/useAuth";
-import { ThemeToggle } from "@/components/ThemeToggle";
+
 import { Overview } from "@/components/admin/Overview";
 import { LeadsPanel } from "@/components/admin/LeadsPanel";
 import { AlumniPanel } from "@/components/admin/AlumniPanel";
@@ -71,7 +71,6 @@ function AdminPage() {
           </Link>
           <div className="flex items-center gap-2">
             <NotificationsBell />
-            <ThemeToggle />
             <button onClick={async () => { await supabase.auth.signOut(); navigate({ to: "/" }); }}
               className="glass rounded-full px-4 h-10 flex items-center gap-2 text-sm hover:scale-105 transition-transform">
               <LogOut className="h-4 w-4" /> Sign out
