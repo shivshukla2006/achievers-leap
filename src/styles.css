@@ -117,7 +117,7 @@
 
 @layer base {
   * { border-color: var(--color-border); }
-  html { font-family: var(--font-sans); }
+  html { font-family: var(--font-sans); scroll-behavior: smooth; scroll-padding-top: 6rem; }
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
