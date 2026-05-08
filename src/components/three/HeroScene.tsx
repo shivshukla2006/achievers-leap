@@ -62,7 +62,8 @@ export function HeroScene() {
   return (
     <div
       ref={containerRef}
-      className="absolute inset-0 overflow-hidden pointer-events-none"
+      onClick={() => setClickPulse((n) => n + 1)}
+      className="absolute inset-0 overflow-hidden pointer-events-auto cursor-pointer"
       style={{ perspective: "1400px" }}
     >
       {/* Deep ambient nebula — subtle parallax */}
@@ -82,9 +83,16 @@ export function HeroScene() {
       {/* Stage with 3D transform */}
       <div className="absolute inset-0 flex items-center justify-center lg:justify-end lg:pr-[8%]">
         <motion.div
+          key={clickPulse}
+          initial={{ scale: 0.92, rotate: -3 }}
+          animate={{ scale: 1, rotate: 0 }}
+          transition={{ type: "spring", stiffness: 220, damping: 14 }}
           style={{
             rotateY: rotY,
             rotateX: rotX,
+            rotateZ: scrollRotZ,
+            scale: scrollScale,
+            y: scrollY3D,
             transformStyle: "preserve-3d",
           }}
           className="relative w-[420px] h-[420px] md:w-[540px] md:h-[540px]"
