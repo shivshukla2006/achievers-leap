@@ -4,6 +4,7 @@ import { ReducedMotionProvider } from "@/lib/useReducedMotion";
 import { Toaster } from "sonner";
 import { PWAInstallPrompt } from "@/components/PWAInstallPrompt";
 import { BackToTop } from "@/components/BackToTop";
+import { CustomCursor } from "@/components/CustomCursor";
 
 import appCss from "../styles.css?url";
 
@@ -81,6 +82,7 @@ function RootComponent() {
     <ThemeProvider>
       <ReducedMotionProvider>
         <Outlet />
+        <CustomCursor />
         <BackToTop />
         <PWAInstallPrompt />
         <Toaster position="top-center" richColors theme="dark" />
