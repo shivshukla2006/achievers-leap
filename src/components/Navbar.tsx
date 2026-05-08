@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Sparkles, Menu, X, Zap, ZapOff } from "lucide-react";
 import { useState } from "react";
-import { useScrollSpy } from "@/lib/useScrollSpy";
+import { useScrollSpy, scrollToId } from "@/lib/useScrollSpy";
 import { useReducedMotionPref } from "@/lib/useReducedMotion";
 
 export function Navbar() {
@@ -9,6 +9,13 @@ export function Navbar() {
   const active = useScrollSpy(["courses", "alumni", "enquiry"]);
   const { reduced, toggle } = useReducedMotionPref();
   const close = () => setOpen(false);
+  const enquiryActive = active === "enquiry";
+
+  const go = (id: string) => (e: React.MouseEvent) => {
+    e.preventDefault();
+    close();
+    scrollToId(id);
+  };
 
   const linkCls = (id: string) =>
     `transition-colors hover:text-foreground ${active === id ? "text-foreground font-semibold relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:right-0 after:h-0.5 after:rounded-full after:bg-gradient-primary" : ""}`;
