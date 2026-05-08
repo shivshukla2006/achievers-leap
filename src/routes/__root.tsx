@@ -1,7 +1,9 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { ReducedMotionProvider } from "@/lib/useReducedMotion";
 import { Toaster } from "sonner";
 import { PWAInstallPrompt } from "@/components/PWAInstallPrompt";
+import { BackToTop } from "@/components/BackToTop";
 
 import appCss from "../styles.css?url";
 
@@ -77,9 +79,12 @@ function RootShell({ children }: { children: React.ReactNode }) {
 function RootComponent() {
   return (
     <ThemeProvider>
-      <Outlet />
-      <PWAInstallPrompt />
-      <Toaster position="top-center" richColors theme="dark" />
+      <ReducedMotionProvider>
+        <Outlet />
+        <BackToTop />
+        <PWAInstallPrompt />
+        <Toaster position="top-center" richColors theme="dark" />
+      </ReducedMotionProvider>
     </ThemeProvider>
   );
 }

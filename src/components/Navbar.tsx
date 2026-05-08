@@ -1,11 +1,17 @@
 import { Link } from "@tanstack/react-router";
-import { Sparkles, Menu, X } from "lucide-react";
+import { Sparkles, Menu, X, Zap, ZapOff } from "lucide-react";
 import { useState } from "react";
+import { useScrollSpy } from "@/lib/useScrollSpy";
+import { useReducedMotionPref } from "@/lib/useReducedMotion";
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
-
+  const active = useScrollSpy(["courses", "alumni", "enquiry"]);
+  const { reduced, toggle } = useReducedMotionPref();
   const close = () => setOpen(false);
+
+  const linkCls = (id: string) =>
+    `transition-colors hover:text-foreground ${active === id ? "text-foreground font-semibold relative after:content-[''] after:absolute after:-bottom-1 after:left-0 after:right-0 after:h-0.5 after:rounded-full after:bg-gradient-primary" : ""}`;
 
   return (
     <header className="fixed top-0 inset-x-0 z-50 px-4 pt-4">
@@ -19,12 +25,21 @@ export function Navbar() {
           </span>
         </Link>
         <div className="hidden md:flex items-center gap-7 text-sm font-medium text-muted-foreground">
-          <a href="#courses" className="hover:text-foreground transition-colors">Courses</a>
-          <a href="#alumni" className="hover:text-foreground transition-colors">Toppers</a>
-          <a href="#enquiry" className="hover:text-foreground transition-colors">Enquire</a>
+          <a href="#courses" className={linkCls("courses")}>Courses</a>
+          <a href="#alumni" className={linkCls("alumni")}>Toppers</a>
+          <a href="#enquiry" className={linkCls("enquiry")}>Enquire</a>
           <Link to="/login" className="hover:text-foreground transition-colors">Staff Login</Link>
         </div>
         <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={toggle}
+            aria-label={reduced ? "Enable animations" : "Reduce motion"}
+            title={reduced ? "Animations off" : "Animations on"}
+            className="glass h-10 w-10 rounded-full flex items-center justify-center hover:scale-110 transition-transform"
+          >
+            {reduced ? <ZapOff className="h-4 w-4" /> : <Zap className="h-4 w-4 text-accent" />}
+          </button>
           <a
             href="#enquiry"
             className="hidden sm:inline-flex h-10 items-center rounded-full bg-gradient-primary px-5 text-sm font-semibold text-primary-foreground shadow-glow hover:scale-[1.03] transition-transform"
@@ -44,10 +59,10 @@ export function Navbar() {
 
       {open && (
         <div className="md:hidden glass-strong max-w-6xl mx-auto rounded-2xl mt-2 p-4 flex flex-col gap-3 text-sm font-medium">
-          <a href="#courses" onClick={close} className="py-2">Courses</a>
-          <a href="#alumni" onClick={close} className="py-2">Toppers</a>
-          <a href="#enquiry" onClick={close} className="py-2">Enquire</a>
-          <Link to="/login" onClick={close} className="py-2">Staff Login</Link>
+          <a href="#courses" onClick={close} className={`py-2 ${active === "courses" ? "text-foreground font-semibold" : "text-muted-foreground"}`}>Courses</a>
+          <a href="#alumni" onClick={close} className={`py-2 ${active === "alumni" ? "text-foreground font-semibold" : "text-muted-foreground"}`}>Toppers</a>
+          <a href="#enquiry" onClick={close} className={`py-2 ${active === "enquiry" ? "text-foreground font-semibold" : "text-muted-foreground"}`}>Enquire</a>
+          <Link to="/login" onClick={close} className="py-2 text-muted-foreground">Staff Login</Link>
           <a
             href="#enquiry"
             onClick={close}
