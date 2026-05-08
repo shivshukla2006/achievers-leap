@@ -1,6 +1,6 @@
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform, useScroll } from "framer-motion";
 import { GraduationCap, Trophy, Sparkles, BookOpen, Star, Award, Atom, Brain } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * Premium cursor-reactive 3D hero visual — pure CSS/Framer Motion (no WebGL).
@@ -9,6 +9,7 @@ import { useEffect, useRef } from "react";
  */
 export function HeroScene() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [clickPulse, setClickPulse] = useState(0);
 
   // Raw mouse offset in [-1, 1]
   const mx = useMotionValue(0);
@@ -18,9 +19,18 @@ export function HeroScene() {
   const sx = useSpring(mx, { stiffness: 80, damping: 18, mass: 0.6 });
   const sy = useSpring(my, { stiffness: 80, damping: 18, mass: 0.6 });
 
+  // Scroll-driven 3D
+  const { scrollY } = useScroll();
+  const scrollSpring = useSpring(scrollY, { stiffness: 60, damping: 20 });
+  const scrollRotZ = useTransform(scrollSpring, [0, 800], [0, 35]);
+  const scrollScale = useTransform(scrollSpring, [0, 800], [1, 0.85]);
+  const scrollY3D = useTransform(scrollSpring, [0, 800], [0, -120]);
+
   // Stage tilt (rotateY/X)
-  const rotY = useTransform(sx, [-1, 1], [12, -12]);
-  const rotX = useTransform(sy, [-1, 1], [-10, 10]);
+  const baseRotY = useTransform(sx, [-1, 1], [12, -12]);
+  const baseRotX = useTransform(sy, [-1, 1], [-10, 10]);
+  const rotY = baseRotY;
+  const rotX = baseRotX;
 
   // Layer translations (different depth amounts)
   const tBack = useTransform(sx, [-1, 1], [-20, 20]);
@@ -52,7 +62,8 @@ export function HeroScene() {
   return (
     <div
       ref={containerRef}
-      className="absolute inset-0 overflow-hidden pointer-events-none"
+      onClick={() => setClickPulse((n) => n + 1)}
+      className="absolute inset-0 overflow-hidden pointer-events-auto cursor-pointer"
       style={{ perspective: "1400px" }}
     >
       {/* Deep ambient nebula — subtle parallax */}
@@ -72,9 +83,16 @@ export function HeroScene() {
       {/* Stage with 3D transform */}
       <div className="absolute inset-0 flex items-center justify-center lg:justify-end lg:pr-[8%]">
         <motion.div
+          key={clickPulse}
+          initial={{ scale: 0.92, rotate: -3 }}
+          animate={{ scale: 1, rotate: 0 }}
+          transition={{ type: "spring", stiffness: 220, damping: 14 }}
           style={{
             rotateY: rotY,
             rotateX: rotX,
+            rotateZ: scrollRotZ,
+            scale: scrollScale,
+            y: scrollY3D,
             transformStyle: "preserve-3d",
           }}
           className="relative w-[420px] h-[420px] md:w-[540px] md:h-[540px]"
