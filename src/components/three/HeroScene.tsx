@@ -74,19 +74,23 @@ export function HeroScene() {
       className="absolute inset-0 overflow-hidden pointer-events-auto cursor-pointer"
       style={{ perspective: "1400px" }}
     >
-      {/* Deep ambient nebula — subtle parallax */}
-      <motion.div
-        style={{ x: tBack, y: tBackY }}
-        className="absolute top-1/2 right-[18%] -translate-y-1/2 w-[640px] h-[640px] rounded-full bg-[radial-gradient(circle,rgba(255,215,0,0.22),transparent_60%)] blur-2xl"
-      />
-      <motion.div
-        style={{ x: tBack, y: tBackY }}
-        className="absolute top-[25%] right-[8%] w-[360px] h-[360px] rounded-full bg-[radial-gradient(circle,rgba(77,111,255,0.28),transparent_65%)] blur-3xl"
-      />
-      <motion.div
-        style={{ x: tMid, y: tMidY }}
-        className="absolute bottom-[10%] right-[28%] w-[280px] h-[280px] rounded-full bg-[radial-gradient(circle,rgba(180,120,255,0.22),transparent_65%)] blur-3xl"
-      />
+      {/* Deep ambient nebula — disabled on mobile to cut GPU cost */}
+      {!isLite && (
+        <>
+          <motion.div
+            style={{ x: tBack, y: tBackY }}
+            className="absolute top-1/2 right-[18%] -translate-y-1/2 w-[640px] h-[640px] rounded-full bg-[radial-gradient(circle,rgba(255,215,0,0.22),transparent_60%)] blur-2xl"
+          />
+          <motion.div
+            style={{ x: tBack, y: tBackY }}
+            className="absolute top-[25%] right-[8%] w-[360px] h-[360px] rounded-full bg-[radial-gradient(circle,rgba(77,111,255,0.28),transparent_65%)] blur-3xl"
+          />
+          <motion.div
+            style={{ x: tMid, y: tMidY }}
+            className="absolute bottom-[10%] right-[28%] w-[280px] h-[280px] rounded-full bg-[radial-gradient(circle,rgba(180,120,255,0.22),transparent_65%)] blur-3xl"
+          />
+        </>
+      )}
 
       {/* Stage with 3D transform */}
       <div className="absolute inset-0 flex items-center justify-center lg:justify-end lg:pr-[8%]">
