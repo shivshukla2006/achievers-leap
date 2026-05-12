@@ -232,33 +232,35 @@ export function HeroScene() {
             </motion.div>
           ))}
 
-          {/* Sparkle particles — mid layer with cursor parallax */}
-          <motion.div
-            className="absolute inset-0"
-            style={{ x: tFront, y: tFrontY }}
-          >
-            {Array.from({ length: 22 }).map((_, i) => {
-              const left = (i * 73) % 100;
-              const top = (i * 47) % 100;
-              const dur = 3 + (i % 4);
-              const size = (i % 3) + 1;
-              return (
-                <motion.div
-                  key={i}
-                  className="absolute rounded-full bg-[#FFD700]"
-                  style={{
-                    left: `${left}%`,
-                    top: `${top}%`,
-                    width: `${size}px`,
-                    height: `${size}px`,
-                    boxShadow: "0 0 8px 2px rgba(255,215,0,0.7)",
-                  }}
-                  animate={{ opacity: [0, 1, 0], scale: [0.5, 1.5, 0.5] }}
-                  transition={{ duration: dur, repeat: Infinity, delay: i * 0.2 }}
-                />
-              );
-            })}
-          </motion.div>
+          {/* Sparkle particles — disabled on mobile/reduced */}
+          {!isLite && (
+            <motion.div
+              className="absolute inset-0"
+              style={{ x: tFront, y: tFrontY }}
+            >
+              {Array.from({ length: 14 }).map((_, i) => {
+                const left = (i * 73) % 100;
+                const top = (i * 47) % 100;
+                const dur = 3 + (i % 4);
+                const size = (i % 3) + 1;
+                return (
+                  <motion.div
+                    key={i}
+                    className="absolute rounded-full bg-[#FFD700]"
+                    style={{
+                      left: `${left}%`,
+                      top: `${top}%`,
+                      width: `${size}px`,
+                      height: `${size}px`,
+                      boxShadow: "0 0 8px 2px rgba(255,215,0,0.7)",
+                    }}
+                    animate={{ opacity: [0, 1, 0], scale: [0.5, 1.5, 0.5] }}
+                    transition={{ duration: dur, repeat: Infinity, delay: i * 0.2 }}
+                  />
+                );
+              })}
+            </motion.div>
+          )}
 
           {/* Subtle corner sparkle icon */}
           <Sparkles className="absolute top-2 right-6 h-5 w-5 text-[#FFD700]/70 animate-pulse" style={{ transform: "translateZ(110px)" }} />
@@ -267,3 +269,4 @@ export function HeroScene() {
     </div>
   );
 }
+
