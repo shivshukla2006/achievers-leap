@@ -1,15 +1,22 @@
 import { motion, useMotionValue, useSpring, useTransform, useScroll } from "framer-motion";
 import { GraduationCap, Trophy, Sparkles, BookOpen, Star, Award, Atom, Brain } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useReducedMotionPref } from "@/lib/useReducedMotion";
 
 /**
  * Premium cursor-reactive 3D hero visual — pure CSS/Framer Motion (no WebGL).
- * Mouse position drives a 3D parallax across multi-depth layers:
- * orbit rings, core emblem, floating chips, and ambient particles.
+ * Auto-downgrades on touch devices and when reduced-motion is on.
  */
 export function HeroScene() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [clickPulse, setClickPulse] = useState(0);
+  const { reduced } = useReducedMotionPref();
+  const [isLite, setIsLite] = useState(false);
+
+  useEffect(() => {
+    const touch = window.matchMedia("(hover: none), (max-width: 768px)").matches;
+    setIsLite(touch || reduced);
+  }, [reduced]);
 
   // Raw mouse offset in [-1, 1]
   const mx = useMotionValue(0);
@@ -22,9 +29,9 @@ export function HeroScene() {
   // Scroll-driven 3D
   const { scrollY } = useScroll();
   const scrollSpring = useSpring(scrollY, { stiffness: 60, damping: 20 });
-  const scrollRotZ = useTransform(scrollSpring, [0, 800], [0, 35]);
-  const scrollScale = useTransform(scrollSpring, [0, 800], [1, 0.85]);
-  const scrollY3D = useTransform(scrollSpring, [0, 800], [0, -120]);
+  const scrollRotZ = useTransform(scrollSpring, [0, 800], [0, isLite ? 0 : 35]);
+  const scrollScale = useTransform(scrollSpring, [0, 800], [1, isLite ? 1 : 0.85]);
+  const scrollY3D = useTransform(scrollSpring, [0, 800], [0, isLite ? 0 : -120]);
 
   // Stage tilt (rotateY/X)
   const baseRotY = useTransform(sx, [-1, 1], [12, -12]);
@@ -41,6 +48,7 @@ export function HeroScene() {
   const tFrontY = useTransform(sy, [-1, 1], [-44, 44]);
 
   useEffect(() => {
+    if (isLite) return; // Skip mouse listeners entirely on mobile/reduced
     const onMove = (e: MouseEvent) => {
       const w = window.innerWidth;
       const h = window.innerHeight;
@@ -51,13 +59,13 @@ export function HeroScene() {
       mx.set(0);
       my.set(0);
     };
-    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mousemove", onMove, { passive: true });
     window.addEventListener("mouseleave", onLeave);
     return () => {
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("mouseleave", onLeave);
     };
-  }, [mx, my]);
+  }, [mx, my, isLite]);
 
   return (
     <div
@@ -66,19 +74,23 @@ export function HeroScene() {
       className="absolute inset-0 overflow-hidden pointer-events-auto cursor-pointer"
       style={{ perspective: "1400px" }}
     >
-      {/* Deep ambient nebula — subtle parallax */}
-      <motion.div
-        style={{ x: tBack, y: tBackY }}
-        className="absolute top-1/2 right-[18%] -translate-y-1/2 w-[640px] h-[640px] rounded-full bg-[radial-gradient(circle,rgba(255,215,0,0.22),transparent_60%)] blur-2xl"
-      />
-      <motion.div
-        style={{ x: tBack, y: tBackY }}
-        className="absolute top-[25%] right-[8%] w-[360px] h-[360px] rounded-full bg-[radial-gradient(circle,rgba(77,111,255,0.28),transparent_65%)] blur-3xl"
-      />
-      <motion.div
-        style={{ x: tMid, y: tMidY }}
-        className="absolute bottom-[10%] right-[28%] w-[280px] h-[280px] rounded-full bg-[radial-gradient(circle,rgba(180,120,255,0.22),transparent_65%)] blur-3xl"
-      />
+      {/* Deep ambient nebula — disabled on mobile to cut GPU cost */}
+      {!isLite && (
+        <>
+          <motion.div
+            style={{ x: tBack, y: tBackY }}
+            className="absolute top-1/2 right-[18%] -translate-y-1/2 w-[640px] h-[640px] rounded-full bg-[radial-gradient(circle,rgba(255,215,0,0.22),transparent_60%)] blur-2xl"
+          />
+          <motion.div
+            style={{ x: tBack, y: tBackY }}
+            className="absolute top-[25%] right-[8%] w-[360px] h-[360px] rounded-full bg-[radial-gradient(circle,rgba(77,111,255,0.28),transparent_65%)] blur-3xl"
+          />
+          <motion.div
+            style={{ x: tMid, y: tMidY }}
+            className="absolute bottom-[10%] right-[28%] w-[280px] h-[280px] rounded-full bg-[radial-gradient(circle,rgba(180,120,255,0.22),transparent_65%)] blur-3xl"
+          />
+        </>
+      )}
 
       {/* Stage with 3D transform */}
       <div className="absolute inset-0 flex items-center justify-center lg:justify-end lg:pr-[8%]">
@@ -224,33 +236,35 @@ export function HeroScene() {
             </motion.div>
           ))}
 
-          {/* Sparkle particles — mid layer with cursor parallax */}
-          <motion.div
-            className="absolute inset-0"
-            style={{ x: tFront, y: tFrontY }}
-          >
-            {Array.from({ length: 22 }).map((_, i) => {
-              const left = (i * 73) % 100;
-              const top = (i * 47) % 100;
-              const dur = 3 + (i % 4);
-              const size = (i % 3) + 1;
-              return (
-                <motion.div
-                  key={i}
-                  className="absolute rounded-full bg-[#FFD700]"
-                  style={{
-                    left: `${left}%`,
-                    top: `${top}%`,
-                    width: `${size}px`,
-                    height: `${size}px`,
-                    boxShadow: "0 0 8px 2px rgba(255,215,0,0.7)",
-                  }}
-                  animate={{ opacity: [0, 1, 0], scale: [0.5, 1.5, 0.5] }}
-                  transition={{ duration: dur, repeat: Infinity, delay: i * 0.2 }}
-                />
-              );
-            })}
-          </motion.div>
+          {/* Sparkle particles — disabled on mobile/reduced */}
+          {!isLite && (
+            <motion.div
+              className="absolute inset-0"
+              style={{ x: tFront, y: tFrontY }}
+            >
+              {Array.from({ length: 14 }).map((_, i) => {
+                const left = (i * 73) % 100;
+                const top = (i * 47) % 100;
+                const dur = 3 + (i % 4);
+                const size = (i % 3) + 1;
+                return (
+                  <motion.div
+                    key={i}
+                    className="absolute rounded-full bg-[#FFD700]"
+                    style={{
+                      left: `${left}%`,
+                      top: `${top}%`,
+                      width: `${size}px`,
+                      height: `${size}px`,
+                      boxShadow: "0 0 8px 2px rgba(255,215,0,0.7)",
+                    }}
+                    animate={{ opacity: [0, 1, 0], scale: [0.5, 1.5, 0.5] }}
+                    transition={{ duration: dur, repeat: Infinity, delay: i * 0.2 }}
+                  />
+                );
+              })}
+            </motion.div>
+          )}
 
           {/* Subtle corner sparkle icon */}
           <Sparkles className="absolute top-2 right-6 h-5 w-5 text-[#FFD700]/70 animate-pulse" style={{ transform: "translateZ(110px)" }} />
@@ -259,3 +273,4 @@ export function HeroScene() {
     </div>
   );
 }
+
