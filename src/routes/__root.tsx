@@ -4,6 +4,7 @@ import { ReducedMotionProvider } from "@/lib/useReducedMotion";
 import { Toaster } from "sonner";
 import { PWAInstallPrompt } from "@/components/PWAInstallPrompt";
 import { BackToTop } from "@/components/BackToTop";
+import { PageLoader } from "@/components/PageLoader";
 
 
 import appCss from "../styles.css?url";
@@ -81,6 +82,7 @@ function RootComponent() {
   return (
     <ThemeProvider>
       <ReducedMotionProvider>
+        <PageLoader />
         <Outlet />
         <BackToTop />
         <PWAInstallPrompt />
