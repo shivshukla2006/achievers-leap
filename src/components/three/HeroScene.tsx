@@ -1,15 +1,22 @@
 import { motion, useMotionValue, useSpring, useTransform, useScroll } from "framer-motion";
 import { GraduationCap, Trophy, Sparkles, BookOpen, Star, Award, Atom, Brain } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useReducedMotionPref } from "@/lib/useReducedMotion";
 
 /**
  * Premium cursor-reactive 3D hero visual — pure CSS/Framer Motion (no WebGL).
- * Mouse position drives a 3D parallax across multi-depth layers:
- * orbit rings, core emblem, floating chips, and ambient particles.
+ * Auto-downgrades on touch devices and when reduced-motion is on.
  */
 export function HeroScene() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [clickPulse, setClickPulse] = useState(0);
+  const { reduced } = useReducedMotionPref();
+  const [isLite, setIsLite] = useState(false);
+
+  useEffect(() => {
+    const touch = window.matchMedia("(hover: none), (max-width: 768px)").matches;
+    setIsLite(touch || reduced);
+  }, [reduced]);
 
   // Raw mouse offset in [-1, 1]
   const mx = useMotionValue(0);
@@ -22,9 +29,9 @@ export function HeroScene() {
   // Scroll-driven 3D
   const { scrollY } = useScroll();
   const scrollSpring = useSpring(scrollY, { stiffness: 60, damping: 20 });
-  const scrollRotZ = useTransform(scrollSpring, [0, 800], [0, 35]);
-  const scrollScale = useTransform(scrollSpring, [0, 800], [1, 0.85]);
-  const scrollY3D = useTransform(scrollSpring, [0, 800], [0, -120]);
+  const scrollRotZ = useTransform(scrollSpring, [0, 800], [0, isLite ? 0 : 35]);
+  const scrollScale = useTransform(scrollSpring, [0, 800], [1, isLite ? 1 : 0.85]);
+  const scrollY3D = useTransform(scrollSpring, [0, 800], [0, isLite ? 0 : -120]);
 
   // Stage tilt (rotateY/X)
   const baseRotY = useTransform(sx, [-1, 1], [12, -12]);
@@ -41,6 +48,7 @@ export function HeroScene() {
   const tFrontY = useTransform(sy, [-1, 1], [-44, 44]);
 
   useEffect(() => {
+    if (isLite) return; // Skip mouse listeners entirely on mobile/reduced
     const onMove = (e: MouseEvent) => {
       const w = window.innerWidth;
       const h = window.innerHeight;
@@ -51,13 +59,13 @@ export function HeroScene() {
       mx.set(0);
       my.set(0);
     };
-    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mousemove", onMove, { passive: true });
     window.addEventListener("mouseleave", onLeave);
     return () => {
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("mouseleave", onLeave);
     };
-  }, [mx, my]);
+  }, [mx, my, isLite]);
 
   return (
     <div
