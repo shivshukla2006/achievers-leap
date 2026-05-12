@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { Sparkles, Menu, X, Zap, ZapOff } from "lucide-react";
+import { Menu, X, Zap, ZapOff } from "lucide-react";
+import logoUrl from "@/assets/logo-option-2.png";
 import { useState } from "react";
 import { useScrollSpy, scrollToId } from "@/lib/useScrollSpy";
 import { useReducedMotionPref } from "@/lib/useReducedMotion";
@@ -24,9 +25,7 @@ export function Navbar() {
     <header className="fixed top-0 inset-x-0 z-50 px-4 pt-4">
       <nav className="glass max-w-6xl mx-auto rounded-2xl px-5 py-3 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2 group">
-          <div className="relative h-9 w-9 rounded-xl bg-gradient-primary flex items-center justify-center shadow-glow">
-            <Sparkles className="h-5 w-5 text-primary-foreground" />
-          </div>
+          <img src={logoUrl} alt="Academic Achievers" width={40} height={40} className="h-10 w-10 object-contain drop-shadow-[0_2px_8px_rgba(255,215,0,0.35)]" />
           <span className="font-display font-bold text-lg tracking-tight">
             Academic <span className="gradient-text">Achievers</span>
           </span>
